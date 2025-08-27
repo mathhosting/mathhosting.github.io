@@ -3,18 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI Chat</title>
+  <title>Math Helping</title>
+
+  <!-- Pixel 8-bit font -->
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
+  <!-- CSS -->
   <link rel="stylesheet" href="style.css">
+
+  <!-- Markdown renderer -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
-<body>
-  <div class="chat-container">
-    <h1>AI Assistant</h1>
-    <div id="chat-box"></div>
-    <div class="input-container">
-      <input type="text" id="user-input" placeholder="Type a message..." />
+<body class="light">
+  <header>
+    <h1 class="title">🤖 Math Problems</h1>
+    <button id="theme-toggle">🌙 Dark Mode</button>
+  </header>
+
+  <main>
+    <div id="chat-box" class="chat-box"></div>
+
+    <div class="input-area">
+      <input id="user-input" type="text" placeholder="Type a message..." />
       <button id="send-btn">Send</button>
     </div>
-  </div>
+  </main>
+
   <script src="script.js"></script>
 </body>
 </html>
