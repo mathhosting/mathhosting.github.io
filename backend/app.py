@@ -1,13 +1,15 @@
-from flask import Flask, request, jsonify
-from flask_cors import CORS
+from flask import Flask, request, jsonify, render_template
 from gradio_client import Client
 import re
 
 app = Flask(__name__)
-CORS(app)  # allows browser frontend to call this backend
 
 # Connect to Gradio model
 client = Client("amd/gpt-oss-120b-chatbot")
+
+@app.route("/")
+def home():
+    return render_template("index.html")
 
 @app.route("/chat", methods=["POST"])
 def chat():
@@ -31,7 +33,7 @@ def chat():
         answer = str(response)
 
     # Clean Markdown
-    answer = answer.split("Response:", 1)[-1].strip()
+    answer = response.split("Response:", 1)[-1].strip()
     answer = re.sub(r'\*{1,2}([^*]+)\*{1,2}', r'\1', answer)
     answer = re.sub(r'[`#*_>]', '', answer)
 
@@ -39,4 +41,3 @@ def chat():
 
 if __name__ == "__main__":
     app.run(debug=True)
-
