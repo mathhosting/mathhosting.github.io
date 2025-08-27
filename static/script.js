@@ -1,10 +1,3 @@
-import { Client } from "https://unpkg.com/@gradio/client/dist/client.mjs";
-
-let client;
-(async () => {
-  client = await Client.connect("amd/gpt-oss-120b-chatbot");
-})();
-
 document.getElementById("send-btn").addEventListener("click", sendMessage);
 document.getElementById("user-input").addEventListener("keypress", (e) => {
   if (e.key === "Enter") sendMessage();
@@ -13,26 +6,21 @@ document.getElementById("user-input").addEventListener("keypress", (e) => {
 async function sendMessage() {
   const input = document.getElementById("user-input");
   const text = input.value.trim();
-  if (!text || !client) return;
+  if (!text) return;
 
   addMessage(text, "user");
   input.value = "";
 
   try {
-    const result = await client.predict("/chat", {
-      message: text,
-      system_prompt: "You are a helpful assistant.",
-      temperature: 0.7,
-      reasoning_effort: "medium",
-      enable_browsing: true
+    const res = await fetch("/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message: text })
     });
-
-    let answer = result.data;
-    answer = answer.replace(/\*+/g, "").replace(/[`#_>]/g, ""); // clean markdown
-
-    addMessage(answer, "bot");
+    const data = await res.json();
+    addMessage(data.reply, "bot");
   } catch (err) {
-    addMessage("Error: Could not connect to AI.", "bot");
+    addMessage("Error: Could not reach AI.", "bot");
     console.error(err);
   }
 }
