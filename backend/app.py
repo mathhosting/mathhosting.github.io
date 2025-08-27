@@ -2,20 +2,24 @@ from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 from gradio_client import Client
 from fake_useragent import UserAgent
-import re, uuid, os
+import uuid
+import re
 
-# Flask app
+# Initialize Flask
 app = Flask(
-    __name__, 
-    static_folder="../frontend",   # frontend folder
+    __name__,
+    static_folder="../frontend",   # path to your frontend folder
     static_url_path=""
 )
 CORS(app)
 
+# Initialize Gradio client
 client = Client("amd/gpt-oss-120b-chatbot")
-sessions = {}  # store active chat sessions
 
-# Serve index.html
+# In-memory session storage
+sessions = {}
+
+# Serve frontend
 @app.route("/")
 def index():
     return send_from_directory(app.static_folder, "index.html")
@@ -27,13 +31,16 @@ def chat():
     user_input = data.get("message", "")
     session_id = data.get("session_id")
 
+    # Create new session if it doesn't exist
     if not session_id or session_id not in sessions:
-        return jsonify({"error": "Invalid session"}), 400
+        session_id = str(uuid.uuid4())
+        sessions[session_id] = []
 
-    # generate random user-agent per message
+    # Generate a random User-Agent
     ua = UserAgent()
     random_ua = ua.random
 
+    # Call GPT model
     response = client.predict(
         message=user_input,
         system_prompt="You are a helpful assistant.",
@@ -52,30 +59,20 @@ def chat():
     else:
         answer = str(response)
 
-    # Clean markdown
+    # Clean markdown (optional)
     answer = answer.split("Response:", 1)[-1].strip()
     answer = re.sub(r'\*{1,2}([^*]+)\*{1,2}', r'\1', answer)
     answer = re.sub(r'[`#*_>]', '', answer)
 
-    sessions[session_id].append({"user": user_input, "bot": answer})
-    return jsonify({"reply": answer, "user_agent": random_ua})
+    # Store in session
+    sessions[session_id].append({"user": user_input, "bot": answer, "user_agent": random_ua})
 
-@app.route("/new_session", methods=["POST"])
-def new_session():
-    data = request.get_json(silent=True) or {}
-    old_id = data.get("old_session_id")
-    
-    # delete old session if exists
-    if old_id and old_id in sessions:
-        del sessions[old_id]
-    
-    # create new session
-    new_id = str(uuid.uuid4())
-    sessions[new_id] = []
-    
-    return jsonify({"session_id": new_id})
-
+    return jsonify({
+        "reply": answer,
+        "session_id": session_id,
+        "user_agent": random_ua
+    })
 
 if __name__ == "__main__":
-    # Use 0.0.0.0 so Replit/Render can access it externally
+    # Use 0.0.0.0 so external services (Render) can access
     app.run(host="0.0.0.0", port=5000)
