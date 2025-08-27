@@ -1,3 +1,5 @@
+const BACKEND_URL = "https://mathhosting-github-io.onrender.com/chat"; // replace with deployed backend URL
+
 document.getElementById("send-btn").addEventListener("click", sendMessage);
 document.getElementById("user-input").addEventListener("keypress", (e) => {
   if (e.key === "Enter") sendMessage();
@@ -12,7 +14,7 @@ async function sendMessage() {
   input.value = "";
 
   try {
-    const res = await fetch("/chat", {
+    const res = await fetch(BACKEND_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ message: text })
