@@ -44,7 +44,6 @@ function startNewChat() {
 }
 
 
-// Send a message to backend
 async function sendMessage() {
   const input = document.getElementById("user-input");
   const text = input.value.trim();
@@ -53,24 +52,20 @@ async function sendMessage() {
   addMessage(text, "user");
   input.value = "";
 
-  try {
-    const res = await fetch(BACKEND_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        message: text,
-        session_id: sessionId,
-        user_agent: sessionUA
-      })
-    });
+  const res = await fetch(BACKEND_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      message: text,
+      session_id: sessionId,
+      user_agent: sessionUA
+    })
+  });
 
-    const data = await res.json();
-    addMessage(data.reply, "bot");
-  } catch (err) {
-    console.error("Error sending message:", err);
-    addMessage("⚠️ Error sending message. Try again.", "bot");
-  }
+  const data = await res.json();
+  addMessage(data.reply, "bot");
 }
+
 
 // Add message to chat UI
 function addMessage(text, sender) {
