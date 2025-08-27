@@ -2,3 +2,4 @@ flask
 flask-cors
 gradio-client
 gunicorn
+fake_useragent
