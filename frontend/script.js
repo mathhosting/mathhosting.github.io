@@ -1,15 +1,13 @@
 const BACKEND_URL = "https://mathhosting-github-io.onrender.com/chat";
 
-let sessionId = null;       // unique session for each chat
-let sessionUA = null;       // unique User-Agent per session
+let sessionId = null;
+let sessionUA = null;
 
 // Custom unique User-Agent generator
 function generateUniqueUserAgent() {
   const osList = [
     "Windows NT 10.0; Win64; x64",
-    "Windows NT 6.1; Win64; x64",
     "Macintosh; Intel Mac OS X 10_15_7",
-    "Macintosh; Intel Mac OS X 11_2_3",
     "X11; Linux x86_64",
     "iPhone; CPU iPhone OS 14_0 like Mac OS X",
     "Android 12; Mobile"
@@ -36,14 +34,14 @@ function generateUniqueUserAgent() {
   }
 }
 
-// Start a new chat session (frontend only)
+// Start a new chat session
 function startNewChat() {
-  sessionId = crypto.randomUUID();       // new unique session ID
-  sessionUA = generateUniqueUserAgent(); // new unique UA for this session
-  document.getElementById("chat-box").innerHTML = ""; // completely wipe old chat
+  sessionId = crypto.randomUUID();       // new unique session
+  sessionUA = generateUniqueUserAgent(); // new unique User-Agent
+  document.getElementById("chat-box").innerHTML = ""; // wipe old chat
 }
 
-
+// Send a message
 async function sendMessage() {
   const input = document.getElementById("user-input");
   const text = input.value.trim();
@@ -52,27 +50,31 @@ async function sendMessage() {
   addMessage(text, "user");
   input.value = "";
 
-  const res = await fetch(BACKEND_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      message: text,
-      session_id: sessionId,
-      user_agent: sessionUA
-    })
-  });
+  try {
+    const res = await fetch(BACKEND_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        message: text,
+        session_id: sessionId,
+        user_agent: sessionUA
+      })
+    });
 
-  const data = await res.json();
-  addMessage(data.reply, "bot");
+    const data = await res.json();
+    addMessage(data.reply, "bot");
+  } catch (err) {
+    console.error("Error sending message:", err);
+    addMessage("⚠️ Error sending message. Try again.", "bot");
+  }
 }
-
 
 // Add message to chat UI
 function addMessage(text, sender) {
   const chatBox = document.getElementById("chat-box");
   const msg = document.createElement("div");
   msg.className = `message ${sender}`;
-  msg.textContent = text;
+  msg.textContent = text;  // plain text (no marked)
   chatBox.appendChild(msg);
   chatBox.scrollTop = chatBox.scrollHeight;
 }
@@ -82,7 +84,6 @@ document.getElementById("send-btn").addEventListener("click", sendMessage);
 document.getElementById("user-input").addEventListener("keypress", e => {
   if (e.key === "Enter") sendMessage();
 });
-// Event listener
 document.getElementById("new-chat-btn").addEventListener("click", startNewChat);
 
 // Initialize first chat on page load
