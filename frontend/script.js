@@ -36,12 +36,13 @@ function generateUniqueUserAgent() {
   }
 }
 
-// Start a new chat session
+// Start a new chat session (frontend only)
 function startNewChat() {
   sessionId = crypto.randomUUID();       // new unique session ID
   sessionUA = generateUniqueUserAgent(); // new unique UA for this session
   document.getElementById("chat-box").innerHTML = ""; // completely wipe old chat
 }
+
 
 // Send a message to backend
 async function sendMessage() {
@@ -86,6 +87,7 @@ document.getElementById("send-btn").addEventListener("click", sendMessage);
 document.getElementById("user-input").addEventListener("keypress", e => {
   if (e.key === "Enter") sendMessage();
 });
+// Event listener
 document.getElementById("new-chat-btn").addEventListener("click", startNewChat);
 
 // Initialize first chat on page load
