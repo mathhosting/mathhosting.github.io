@@ -1,25 +1,17 @@
-const BACKEND_URL = "https://mathhosting-github-io.onrender.com/chat"; // your backend URL
+const BACKEND_URL = "https://mathhosting-github-io.onrender.com/chat";  // backend serves frontend + API
 
-document.getElementById("send-btn").addEventListener("click", sendMessage);
-document.getElementById("user-input").addEventListener("keypress", (e) => {
-  if (e.key === "Enter") sendMessage();
-});
+let sessionId = null;
 
-// Theme switching
-const themeToggle = document.getElementById("theme-toggle");
-const themes = ["light", "dark", "galaxy"];
-let currentTheme = 0;
-
-themeToggle.addEventListener("click", () => {
-  currentTheme = (currentTheme + 1) % themes.length;
-  document.body.className = themes[currentTheme];
-  themeToggle.textContent =
-    themes[currentTheme] === "light"
-      ? "🌙 Dark Mode"
-      : themes[currentTheme] === "dark"
-      ? "🌌 Galaxy Mode"
-      : "☀️ Light Mode";
-});
+async function startNewSession() {
+  const res = await fetch(`${BACKEND_URL}new_session`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ old_session_id: sessionId })
+  });
+  const data = await res.json();
+  sessionId = data.session_id;
+  document.getElementById("chat-box").innerHTML = "";
+}
 
 async function sendMessage() {
   const input = document.getElementById("user-input");
@@ -29,32 +21,27 @@ async function sendMessage() {
   addMessage(text, "user");
   input.value = "";
 
-  try {
-    const res = await fetch(BACKEND_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message: text }),
-    });
-    const data = await res.json();
-
-    // Parse Markdown
-    const botReply = marked.parse(data.reply);
-    addMessage(botReply, "bot", true);
-  } catch (err) {
-    addMessage("**Error:** Could not reach AI.", "bot", true);
-    console.error(err);
-  }
+  const res = await fetch(`${BACKEND_URL}chat`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ message: text, session_id: sessionId })
+  });
+  const data = await res.json();
+  addMessage(data.reply + `\n(User-Agent: ${data.user_agent})`, "bot");
 }
 
-function addMessage(text, sender, isHTML = false) {
+function addMessage(text, sender) {
   const chatBox = document.getElementById("chat-box");
   const msg = document.createElement("div");
   msg.className = `message ${sender}`;
-  if (isHTML) {
-    msg.innerHTML = text;
-  } else {
-    msg.innerText = text;
-  }
+  msg.textContent = text;
   chatBox.appendChild(msg);
   chatBox.scrollTop = chatBox.scrollHeight;
 }
+
+document.getElementById("send-btn").addEventListener("click", sendMessage);
+document.getElementById("user-input").addEventListener("keypress", e => { if (e.key === "Enter") sendMessage(); });
+document.getElementById("new-chat-btn").addEventListener("click", startNewSession);
+
+// start a fresh session when page loads
+startNewSession();
