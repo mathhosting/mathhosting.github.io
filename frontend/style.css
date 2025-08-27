@@ -2,7 +2,7 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  transition: background 0.3s, color 0.3s;
+  transition: background 0.4s, color 0.4s;
 }
 
 header {
@@ -16,6 +16,7 @@ header {
 .title {
   font-family: "Press Start 2P", cursive;
   font-size: 18px;
+  color: var(--accent);
 }
 
 button {
@@ -26,6 +27,7 @@ button {
   background: var(--accent);
   color: white;
   font-weight: bold;
+  transition: background 0.3s;
 }
 
 button:hover {
@@ -49,6 +51,7 @@ main {
   padding: 10px;
   border-radius: 8px;
   max-width: 70%;
+  line-height: 1.5;
 }
 
 .message.user {
@@ -99,7 +102,6 @@ body.dark {
   color: var(--text);
 }
 
-/* GALAXY BACKGROUND */
 body.galaxy {
   --text: #ffffff;
   --accent: #ff69b4;
@@ -109,13 +111,15 @@ body.galaxy {
   overflow: hidden;
 }
 
-/* Animated stars */
+/* Animated stars for Galaxy mode */
 body.galaxy::before,
 body.galaxy::after {
   content: "";
   position: absolute;
-  top: 0; left: 0;
-  width: 200%; height: 200%;
+  top: 0;
+  left: 0;
+  width: 200%;
+  height: 200%;
   background: transparent url("https://www.transparenttextures.com/patterns/stardust.png") repeat;
   opacity: 0.6;
   animation: moveStars 100s linear infinite;
@@ -128,6 +132,10 @@ body.galaxy::after {
 }
 
 @keyframes moveStars {
-  from { transform: translate(0, 0); }
-  to { transform: translate(-100px, -100px); }
+  from {
+    transform: translate(0, 0);
+  }
+  to {
+    transform: translate(-100px, -100px);
+  }
 }
