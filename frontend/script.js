@@ -1,6 +1,7 @@
 const BACKEND_URL = "https://mathhosting-github-io.onrender.com/chat";  // backend serves frontend + API
 
 let sessionId = null;
+let sessionMessages = []; // stores chat history in the frontend
 
 async function startNewSession() {
   const res = await fetch(`${BACKEND_URL}new_session`, {
@@ -37,6 +38,10 @@ function addMessage(text, sender) {
   msg.innerHTML = marked.parse(text); // render Markdown as HTML
   chatBox.appendChild(msg);
   chatBox.scrollTop = chatBox.scrollHeight;
+}
+async function startNewChat() {
+  sessionMessages = [];                    // clear previous messages
+  document.getElementById("chat-box").innerHTML = ""; // clear chat UI
 }
 
 
