@@ -60,19 +60,21 @@ def chat():
     sessions[session_id].append({"user": user_input, "bot": answer})
     return jsonify({"reply": answer, "user_agent": random_ua})
 
-# New session endpoint
 @app.route("/new_session", methods=["POST"])
 def new_session():
     data = request.get_json(silent=True) or {}
     old_id = data.get("old_session_id")
-
+    
+    # delete old session if exists
     if old_id and old_id in sessions:
         del sessions[old_id]
-
+    
+    # create new session
     new_id = str(uuid.uuid4())
     sessions[new_id] = []
-
+    
     return jsonify({"session_id": new_id})
+
 
 if __name__ == "__main__":
     # Use 0.0.0.0 so Replit/Render can access it externally
