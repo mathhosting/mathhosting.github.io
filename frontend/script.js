@@ -34,12 +34,17 @@ function generateUniqueUserAgent() {
   }
 }
 
-// Start a new chat session
-function startNewChat() {
-  sessionId = crypto.randomUUID();       // new unique session
-  sessionUA = generateUniqueUserAgent(); // new unique User-Agent
-  document.getElementById("chat-box").innerHTML = ""; // wipe old chat
+async function startNewChat() {
+    const res = await fetch(BACKEND_URL.replace("/chat","/new_session"), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ old_session_id: sessionId })
+    });
+    const data = await res.json();
+    sessionId = data.session_id;              // new session ID
+    document.getElementById("chat-box").innerHTML = ""; // wipe chat UI
 }
+
 
 // Send a message
 async function sendMessage() {
