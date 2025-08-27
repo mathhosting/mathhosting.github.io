@@ -1,30 +1,16 @@
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 from gradio_client import Client
 from fake_useragent import UserAgent
 import uuid
 import re
 
-# Initialize Flask
-app = Flask(
-    __name__,
-    static_folder="../frontend",   # path to your frontend folder
-    static_url_path=""
-)
-CORS(app)
+app = Flask(__name__)
+CORS(app)  # allow frontend from any domain to call API
 
-# Initialize Gradio client
 client = Client("amd/gpt-oss-120b-chatbot")
-
-# In-memory session storage
 sessions = {}
 
-# Serve frontend
-@app.route("/")
-def index():
-    return send_from_directory(app.static_folder, "index.html")
-
-# Chat endpoint
 @app.route("/chat", methods=["POST"])
 def chat():
     data = request.get_json()
@@ -74,5 +60,4 @@ def chat():
     })
 
 if __name__ == "__main__":
-    # Use 0.0.0.0 so external services (Render) can access
     app.run(host="0.0.0.0", port=5000)
