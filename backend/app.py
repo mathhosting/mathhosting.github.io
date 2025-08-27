@@ -76,7 +76,22 @@ def chat():
         # Always return 200 to keep uptime monitoring happy
         return jsonify({"reply": "OK", "session_id": str(uuid.uuid4()), "error": str(e)}), 200
 
+# NEW endpoint: start a new session and delete old one
+@app.route("/new_session", methods=["POST"])
+def new_session():
+    data = request.get_json(force=True, silent=True) or {}
+    old_id = data.get("old_session_id")
+
+    # Delete old session if it exists
+    if old_id and old_id in sessions:
+        del sessions[old_id]
+
+    # Create new session
+    new_id = str(uuid.uuid4())
+    sessions[new_id] = []
+
+    return jsonify({"session_id": new_id}), 200
+
 
 if __name__ == "__main__":
-    # Use 0.0.0.0 so Render can access externally
     app.run(host="0.0.0.0", port=5000)
