@@ -34,10 +34,11 @@ function addMessage(text, sender) {
   const chatBox = document.getElementById("chat-box");
   const msg = document.createElement("div");
   msg.className = `message ${sender}`;
-  msg.textContent = text;
+  msg.innerHTML = marked.parse(text); // render Markdown as HTML
   chatBox.appendChild(msg);
   chatBox.scrollTop = chatBox.scrollHeight;
 }
+
 
 document.getElementById("send-btn").addEventListener("click", sendMessage);
 document.getElementById("user-input").addEventListener("keypress", e => { if (e.key === "Enter") sendMessage(); });
