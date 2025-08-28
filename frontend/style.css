@@ -89,19 +89,21 @@ body.galaxy {
   background: radial-gradient(circle at bottom, #0b0033, #000000 90%);
   color: var(--text);
   overflow: hidden;
+  position: relative; /* ✅ Needed for ::before/::after to be positioned */
 }
 
 /* Animated stars */
 body.galaxy::before,
 body.galaxy::after {
   content: "";
-  position: absolute;
+  position: fixed; /* ✅ Fixed keeps stars always covering viewport */
   top: 0; left: 0;
   width: 200%; height: 200%;
   background: transparent url("https://www.transparenttextures.com/patterns/stardust.png") repeat;
   opacity: 0.6;
   animation: moveStars 100s linear infinite;
-  z-index: -1;
+  z-index: 0; /* ✅ On top of background, behind messages */
+  pointer-events: none; /* ✅ Prevents blocking clicks */
 }
 
 body.galaxy::after {
@@ -111,5 +113,11 @@ body.galaxy::after {
 
 @keyframes moveStars {
   from { transform: translate(0, 0); }
-  to { transform: translate(-100px, -100px); }
+  to { transform: translate(-200px, -200px); } /* ✅ Make motion more noticeable */
+}
+
+/* Make sure chat sits above stars */
+main, header {
+  position: relative;
+  z-index: 1; /* ✅ Keep UI above star layers */
 }
