@@ -7,7 +7,7 @@ Based on OpenAI's GPT-4 Turbo Model (arguably better than GPT-5 Normal) ✨
 
 ## 🖥️ *Demo*
 
-> Try it out! [Shiner](#https://mathhosting.github.io/frontend/)
+> Try it out! [Shiner](https://mathhosting.github.io/frontend/)
 
 
 ## © 2025 Shiner
