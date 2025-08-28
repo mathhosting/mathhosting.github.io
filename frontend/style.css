@@ -15,12 +15,13 @@ header {
 
 .title {
   font-family: Arial, sans-serif;
-  font-size: 18px;       /* smaller so it matches your old look */
+  font-size: 18px;
   font-weight: bold;
-  line-height: 1;        /* prevents tall spacing */
-  margin: 0;             /* removes extra space around <h1> */
+  line-height: 1;
+  margin: 0;
   color: #ffffff;
 }
+
 
 
 
