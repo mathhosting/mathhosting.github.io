@@ -101,15 +101,7 @@ body.galaxy::before {
   z-index: -2;
 }
 
-/* Canvas overlay for falling stars */
-#starfield {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  z-index: -1;
-  pointer-events: none;
-}
-
+/* Moving star layer */
 body.galaxy::after {
   content: "";
   position: fixed;
@@ -117,15 +109,10 @@ body.galaxy::after {
   width: 100%; height: 100%;
   background: transparent url("https://www.transparenttextures.com/patterns/stardust.png") repeat;
   background-size: 400px 400px; /* make stars more visible */
-  opacity: 0.6;
-  animation: moveStars 60s linear infinite;
-  z-index: 0;
+  opacity: 0.4;
+  animation: moveStars 90s linear infinite;
+  z-index: -1;
   pointer-events: none;
-}
-
-body.galaxy::after {
-  animation-duration: 120s; /* slower layer for parallax effect */
-  opacity: 0.3;
 }
 
 @keyframes moveStars {
