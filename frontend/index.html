@@ -3,16 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Shiner</title>
-  
-  <!-- CSS -->
+  <title>Galaxy Chat</title>
   <link rel="stylesheet" href="style.css">
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+  <!-- Libraries -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
 </head>
 <body class="galaxy">
 
+  <div id="vanta-bg"></div>
+
   <header>
-    <h1 class="title">Shiner V1 (DOWN)</h1>
+    <h1 class="title float-animation">🌌 Galaxy Chat</h1>
     <button id="new-chat-btn">🆕 New Chat</button>
   </header>
 
@@ -20,7 +24,7 @@
     <div id="chat-box" class="chat-box"></div>
 
     <div class="input-area">
-      <input id="user-input" type="text" placeholder="Note: Clicking New Chat doesn't actually make a new chat. Reload the page a couple of times :)" />
+      <input id="user-input" type="text" placeholder="Type a message..." />
       <button id="send-btn">Send</button>
     </div>
   </main>
