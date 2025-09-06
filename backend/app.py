@@ -38,10 +38,8 @@ def chat():
         # Call GPT model
         response = client.predict(
             message=user_input,
-            system_prompt="You are a helpful assistant.",
+            system_prompt="You are the world's smartest coder.",
             temperature=0.7,
-            reasoning_effort="medium",
-            enable_browsing=True,
             api_name="/chat",
             headers={"User-Agent": random_ua}
         )
