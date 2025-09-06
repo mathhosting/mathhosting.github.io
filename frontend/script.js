@@ -3,7 +3,7 @@ const BACKEND_URL = "https://mathhosting-github-io.onrender.com/chat";
 let sessionId = null;
 let sessionUA = null;
 
-// Custom unique User-Agent generator
+/* Generate Fake UA */
 function generateUniqueUserAgent() {
   const osList = [
     "Windows NT 10.0; Win64; x64",
@@ -12,10 +12,8 @@ function generateUniqueUserAgent() {
     "iPhone; CPU iPhone OS 14_0 like Mac OS X",
     "Android 12; Mobile"
   ];
-
   const browsers = ["Chrome", "Firefox", "Edge", "Safari"];
   const major = Math.floor(Math.random() * 100) + 1;
-  const minor = Math.floor(Math.random() * 50);
   const build = Math.floor(Math.random() * 4000) + 1000;
   const patch = Math.floor(Math.random() * 100) + 1;
 
@@ -34,19 +32,20 @@ function generateUniqueUserAgent() {
   }
 }
 
+/* Start a new chat session */
 async function startNewChat() {
-    const res = await fetch(BACKEND_URL.replace("/chat","/new_session"), {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ old_session_id: sessionId })
-    });
-    const data = await res.json();
-    sessionId = data.session_id;              // new session ID
-    document.getElementById("chat-box").innerHTML = ""; // wipe chat UI
+  const res = await fetch(BACKEND_URL.replace("/chat", "/new_session"), {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ old_session_id: sessionId })
+  });
+  const data = await res.json();
+  sessionId = data.session_id;
+  sessionUA = generateUniqueUserAgent();
+  document.getElementById("chat-box").innerHTML = "";
 }
 
-
-// Send a message
+/* Send message */
 async function sendMessage() {
   const input = document.getElementById("user-input");
   const text = input.value.trim();
@@ -74,22 +73,39 @@ async function sendMessage() {
   }
 }
 
-// Add message to chat UI
+/* Add message to UI */
 function addMessage(text, sender) {
   const chatBox = document.getElementById("chat-box");
   const msg = document.createElement("div");
   msg.className = `message ${sender}`;
-  msg.textContent = text;  // plain text (no marked)
+  msg.textContent = text;
   chatBox.appendChild(msg);
   chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-// Event listeners
+/* Event Listeners */
 document.getElementById("send-btn").addEventListener("click", sendMessage);
 document.getElementById("user-input").addEventListener("keypress", e => {
   if (e.key === "Enter") sendMessage();
 });
 document.getElementById("new-chat-btn").addEventListener("click", startNewChat);
 
-// Initialize first chat on page load
-startNewChat();
+/* Init Vanta + Start session */
+window.addEventListener("DOMContentLoaded", () => {
+  VANTA.NET({
+    el: "#vanta-bg",
+    mouseControls: true,
+    touchControls: true,
+    gyroControls: false,
+    minHeight: 200.00,
+    minWidth: 200.00,
+    scale: 1.0,
+    scaleMobile: 1.0,
+    color: 0x9333ea,
+    backgroundColor: 0x0,
+    points: 10.0,
+    maxDistance: 25.0,
+    spacing: 18.0
+  });
+  startNewChat();
+});
