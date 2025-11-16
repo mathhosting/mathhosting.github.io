@@ -2,42 +2,48 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Real Chat App</title>
+  <title>Chat App</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="app">
-    <!-- Sidebar -->
-    <div id="sidebar">
-      <!-- Login/Register -->
-      <div id="authForm">
-        <h3>Register</h3>
-        <input id="regUsername" placeholder="Username">
-        <input id="regPassword" type="password" placeholder="Password">
-        <input id="regProfile" placeholder="Profile picture URL (optional)">
-        <button id="registerBtn">Register</button>
+  <!-- ===== AUTH SECTION ===== -->
+  <div id="authContainer">
+    <h1>Welcome to ChatApp</h1>
 
-        <h3>Login</h3>
-        <input id="loginUsername" placeholder="Username">
-        <input id="loginPassword" type="password" placeholder="Password">
-        <button id="loginBtn">Login</button>
-      </div>
-
-      <div id="loggedInUI" style="display:none;">
-        <button id="logoutBtn">Logout</button>
-        <hr>
-        <input id="searchInput" placeholder="Search users...">
-        <div id="userList"></div>
-      </div>
+    <div class="authBox">
+      <h2>Login</h2>
+      <input id="loginUsername" placeholder="Username">
+      <input id="loginPassword" placeholder="Password" type="password">
+      <button id="loginBtn">Login</button>
     </div>
 
-    <!-- Chat Area -->
-    <div id="chatArea">
-      <div id="chatHeader"></div>
-      <div id="chat"></div>
-      <div id="chatInputBox">
-        <input id="messageInput" placeholder="Type a message...">
-        <button id="sendBtn">Send</button>
+    <div class="authBox">
+      <h2>Register</h2>
+      <input id="regUsername" placeholder="Username">
+      <input id="regPassword" placeholder="Password" type="password">
+      <input id="regProfile" placeholder="Profile Picture URL">
+      <button id="registerBtn">Register</button>
+    </div>
+  </div>
+
+  <!-- ===== CHAT APP SECTION ===== -->
+  <div id="chatApp" style="display:none;">
+    <div id="topBar">
+      <h2>ChatApp</h2>
+      <button id="logoutBtn">Logout</button>
+    </div>
+
+    <div id="mainContainer">
+      <!-- Users list -->
+      <div id="usersContainer" class="usersList"></div>
+
+      <!-- Chat area -->
+      <div class="chatArea">
+        <div id="chatContainer" class="messages"></div>
+        <div class="messageInputBox">
+          <input id="messageInput" placeholder="Type a message">
+          <button id="sendBtn">Send</button>
+        </div>
       </div>
     </div>
   </div>
