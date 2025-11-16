@@ -1,47 +1,128 @@
 const API = "https://sardineisamazing.onrender.com"; // your Render URL
 
-const chat = document.getElementById("chat");
-const input = document.getElementById("messageInput");
+// DOM elements
+const usernameInput = document.getElementById("usernameInput");
+const profileInput = document.getElementById("profileInput");
+const registerBtn = document.getElementById("registerBtn");
+const userListDiv = document.getElementById("userList");
+const searchInput = document.getElementById("searchInput");
+const chatHeader = document.getElementById("chatHeader");
+const chatDiv = document.getElementById("chat");
+const messageInput = document.getElementById("messageInput");
 const sendBtn = document.getElementById("sendBtn");
 
-// Send message
-async function sendMessage() {
-  const text = input.value.trim();
-  if (!text) return;
+// State
+let currentUser = JSON.parse(localStorage.getItem("chatUser")) || null;
+let currentChatUser = null;
 
-  await fetch(`${API}/send`, {
+// --- Register / Login ---
+registerBtn.onclick = async () => {
+  const username = usernameInput.value.trim();
+  const profile = profileInput.value.trim();
+  if (!username) return alert("Username required");
+
+  const res = await fetch(`${API}/register`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ text })
+    body: JSON.stringify({ username, profile_picture: profile })
   });
+  const data = await res.json();
+  if (data.error) return alert(data.error);
 
-  input.value = "";
+  currentUser = data.user;
+  localStorage.setItem("chatUser", JSON.stringify(currentUser));
+  usernameInput.value = "";
+  profileInput.value = "";
+  loadUsers();
+};
+
+// --- Load / Search Users ---
+async function loadUsers(query = "") {
+  if (!currentUser) return;
+  const res = await fetch(`${API}/users?search=${encodeURIComponent(query)}`);
+  const users = await res.json();
+  userListDiv.innerHTML = "";
+  users.forEach(u => {
+    if (u.id === currentUser.id) return; // skip self
+    const div = document.createElement("div");
+    div.classList.add("userItem");
+    div.innerHTML = `<img src="${u.profile_picture || 'https://via.placeholder.com/30'}"><span>${u.username}</span>`;
+    div.onclick = () => selectChat(u);
+    userListDiv.appendChild(div);
+  });
+}
+
+searchInput.addEventListener("input", () => {
+  loadUsers(searchInput.value);
+});
+
+// --- Select Chat ---
+function selectChat(user) {
+  currentChatUser = user;
+  chatHeader.textContent = user.username;
   loadMessages();
 }
 
-// Load messages from backend
+// --- Load Messages ---
 async function loadMessages() {
-  const res = await fetch(`${API}/messages`);
-  const msgs = await res.json();
+  if (!currentUser || !currentChatUser) return;
+  const res = await fetch(`${API}/messages?user1=${currentUser.id}&user2=${currentChatUser.id}`);
+  const messages = await res.json();
+  chatDiv.innerHTML = "";
 
-  chat.innerHTML = "";
-  msgs.forEach(m => {
+  messages.forEach(m => {
     const div = document.createElement("div");
-    div.textContent = m.text;
-    chat.appendChild(div);
+    div.classList.add("message");
+
+    const img = document.createElement("img");
+    img.src = m.from_profile || 'https://via.placeholder.com/35';
+
+    const content = document.createElement("div");
+    content.classList.add("messageContent");
+    content.textContent = m.text;
+
+    // delete button if message is from current user
+    if (m.from_user === currentUser.id) {
+      const delBtn = document.createElement("span");
+      delBtn.textContent = "×";
+      delBtn.classList.add("deleteBtn");
+      delBtn.onclick = async () => {
+        await fetch(`${API}/messages/${m.id}`, { method: "DELETE" });
+        loadMessages();
+      };
+      content.appendChild(delBtn);
+    }
+
+    div.appendChild(img);
+    div.appendChild(content);
+    chatDiv.appendChild(div);
   });
 
-  chat.scrollTop = chat.scrollHeight;
+  chatDiv.scrollTop = chatDiv.scrollHeight;
 }
 
-// Event listeners
-sendBtn.addEventListener("click", sendMessage);
-input.addEventListener("keypress", e => {
-  if (e.key === "Enter") sendMessage();
+// --- Send Message ---
+sendBtn.onclick = async () => {
+  if (!currentChatUser || !messageInput.value.trim()) return;
+  await fetch(`${API}/send`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      from_user: currentUser.id,
+      to_user: currentChatUser.id,
+      text: messageInput.value.trim()
+    })
+  });
+  messageInput.value = "";
+  loadMessages();
+};
+
+messageInput.addEventListener("keypress", e => {
+  if (e.key === "Enter") sendBtn.onclick();
 });
 
-// Auto-refresh chat every 0.8s
-setInterval(loadMessages, 800);
+// --- Auto-refresh messages ---
+setInterval(loadMessages, 1000);
 
-// Initial load
-loadMessages();
+// --- Auto-load users ---
+if (currentUser) loadUsers();
