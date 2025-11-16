@@ -140,7 +140,7 @@ async function loadUsers(query = "") {
     if (u.id === currentUser.id) return; // skip self
     const div = document.createElement("div");
     div.className = "userItem";
-    div.innerHTML = `<img src="${u.profile_picture || 'https://via.placeholder.com/35'}" width="35"> ${u.username}`;
+    div.innerHTML = `<img src="${u.profile_picture || './download.jpg'}" width="35"> ${u.username}`;
     div.onclick = () => selectUser(u);
     usersContainer.appendChild(div);
   });
@@ -167,7 +167,7 @@ async function loadMessages() {
     const div = document.createElement("div");
     div.className = m.from_user === currentUser.id ? "msgOut" : "msgIn";
     div.innerHTML = `
-      <img src="${m.from_profile || 'https://via.placeholder.com/35'}" width="35">
+      <img src="${m.from_profile || './download.jpg'}" width="35">
       <strong>${m.from_username}</strong>: ${m.text}
       ${m.from_user === currentUser.id ? `<button onclick="deleteMessage(${m.id})">Delete</button>` : ""}
     `;
