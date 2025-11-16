@@ -9,14 +9,26 @@
   <div id="app">
     <!-- Sidebar -->
     <div id="sidebar">
-      <div id="user-form">
-        <input id="usernameInput" placeholder="Enter username"/>
-        <input id="profileInput" placeholder="Profile picture URL (optional)"/>
-        <button id="registerBtn">Register / Login</button>
+      <!-- Login/Register -->
+      <div id="authForm">
+        <h3>Register</h3>
+        <input id="regUsername" placeholder="Username">
+        <input id="regPassword" type="password" placeholder="Password">
+        <input id="regProfile" placeholder="Profile picture URL (optional)">
+        <button id="registerBtn">Register</button>
+
+        <h3>Login</h3>
+        <input id="loginUsername" placeholder="Username">
+        <input id="loginPassword" type="password" placeholder="Password">
+        <button id="loginBtn">Login</button>
       </div>
-      <hr>
-      <input id="searchInput" placeholder="Search users..."/>
-      <div id="userList"></div>
+
+      <div id="loggedInUI" style="display:none;">
+        <button id="logoutBtn">Logout</button>
+        <hr>
+        <input id="searchInput" placeholder="Search users...">
+        <div id="userList"></div>
+      </div>
     </div>
 
     <!-- Chat Area -->
@@ -24,7 +36,7 @@
       <div id="chatHeader"></div>
       <div id="chat"></div>
       <div id="chatInputBox">
-        <input id="messageInput" placeholder="Type a message..."/>
+        <input id="messageInput" placeholder="Type a message...">
         <button id="sendBtn">Send</button>
       </div>
     </div>
