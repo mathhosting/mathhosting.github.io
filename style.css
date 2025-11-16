@@ -86,8 +86,12 @@ h1, h2 {
   flex: 1;
   overflow-y: auto;
   padding: 10px;
+  display: flex;
+  flex-direction: column; /* stack messages vertically */
+  gap: 5px; /* spacing between messages */
   background: #e5ddd5;
 }
+
 
 .msgIn, .msgOut {
   padding: 6px 10px;
@@ -100,12 +104,18 @@ h1, h2 {
 
 .msgIn {
   background: #fff;
-  align-self: flex-start;
+  align-self: flex-start; /* left side */
+  padding: 6px 10px;
+  border-radius: 8px;
+  max-width: 70%;
 }
 
 .msgOut {
   background: #dcf8c6;
-  align-self: flex-end;
+  align-self: flex-end; /* right side */
+  padding: 6px 10px;
+  border-radius: 8px;
+  max-width: 70%;
 }
 
 .msgIn img, .msgOut img {
