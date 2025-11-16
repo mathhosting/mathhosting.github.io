@@ -46,7 +46,7 @@ async function loadUsers(query = "") {
     if (u.id === currentUser.id) return; // skip self
     const div = document.createElement("div");
     div.classList.add("userItem");
-    div.innerHTML = `<img src="${u.profile_picture || 'https://via.placeholder.com/30'}"><span>${u.username}</span>`;
+    div.innerHTML = `<img src="${u.profile_picture || './download.jpg'}"><span>${u.username}</span>`;
     div.onclick = () => selectChat(u);
     userListDiv.appendChild(div);
   });
