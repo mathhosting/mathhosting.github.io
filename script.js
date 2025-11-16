@@ -158,23 +158,31 @@ function selectUser(user) {
 // =====================
 async function loadMessages() {
   if (!selectedUser) return;
+
   const messages = await safeFetch(`${API}/messages?user2=${selectedUser.id}`, {
     headers: { Authorization: token }
   });
-  chatContainer.innerHTML = "";
+
   if (!messages) return;
+
+  chatContainer.innerHTML = "";
+
   messages.forEach(m => {
     const div = document.createElement("div");
     div.className = m.from_user === currentUser.id ? "msgOut" : "msgIn";
+
     div.innerHTML = `
-      <img src="${m.from_profile || './download.jpg'}" width="35">
+      <img src="${m.from_profile || 'https://via.placeholder.com/35'}">
       <strong>${m.from_username}</strong>: ${m.text}
-      ${m.from_user === currentUser.id ? `<button onclick="deleteMessage(${m.id})">Delete</button>` : ""}
     `;
+
     chatContainer.appendChild(div);
   });
+
+  // Scroll to bottom
   chatContainer.scrollTop = chatContainer.scrollHeight;
 }
+
 
 // =====================
 // SEND MESSAGE
@@ -192,8 +200,9 @@ sendBtn.onclick = async () => {
 
   if (!res) return;
   messageInput.value = "";
-  loadMessages();
+  loadMessages(); // append new message at bottom
 };
+
 
 // =====================
 // DELETE MESSAGE
