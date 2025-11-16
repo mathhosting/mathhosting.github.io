@@ -12,19 +12,22 @@ async function safeFetch(url, options = {}) {
   try {
     const res = await fetch(url, options);
 
+    const text = await res.text(); // read body once
+
     if (!res.ok) {
       let errorMsg;
       try {
-        const data = await res.json();
+        const data = JSON.parse(text);
         errorMsg = data.error || JSON.stringify(data);
       } catch {
-        errorMsg = await res.text();
+        errorMsg = text;
       }
       throw new Error(`${res.status} ${res.statusText}: ${errorMsg}`);
     }
 
+    // parse JSON if possible
     try {
-      return await res.json();
+      return JSON.parse(text);
     } catch {
       throw new Error("Response is not valid JSON");
     }
@@ -34,6 +37,7 @@ async function safeFetch(url, options = {}) {
     return null;
   }
 }
+
 
 // =====================
 // DOM ELEMENTS
