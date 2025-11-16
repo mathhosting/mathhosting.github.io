@@ -75,7 +75,7 @@ async function loadMessages() {
     div.classList.add("message");
 
     const img = document.createElement("img");
-    img.src = m.from_profile || 'https://via.placeholder.com/35';
+    img.src = m.from_profile || './download.jpg';
 
     const content = document.createElement("div");
     content.classList.add("messageContent");
