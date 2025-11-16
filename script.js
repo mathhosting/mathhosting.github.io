@@ -31,23 +31,23 @@ document.addEventListener("DOMContentLoaded", () => {
   
   // ---------- Auth ----------
   
-  // Register
-  registerBtn.onclick = async () => {
-    const username = regUsername.value.trim();
-    const password = regPassword.value.trim();
-    const profile = regProfile.value.trim();
-    if (!username || !password) return alert("Fill username & password");
-  
-    const res = await fetch(`${API}/register`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password, profile_picture: profile })
-    });
-    const data = await res.json();
-    if (data.error) return alert(data.error);
-    alert("Registered! Please log in.");
-    regUsername.value = regPassword.value = regProfile.value = "";
-  };
+    // Register
+    registerBtn.onclick = async () => {
+      const username = regUsername.value.trim();
+      const password = regPassword.value.trim();
+      const profile = regProfile.value.trim();
+      if (!username || !password) return alert("Fill username & password");
+    
+      const res = await fetch(`${API}/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password, profile_picture: profile })
+      });
+      const data = await res.json();
+      if (data.error) return alert(data.error);
+      alert("Registered! Please log in.");
+      regUsername.value = regPassword.value = regProfile.value = "";
+    };
   
   // Login
   loginBtn.onclick = async () => {
