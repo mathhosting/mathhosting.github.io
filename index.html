@@ -2,15 +2,31 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Simple Chat App</title>
+  <title>Real Chat App</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="chat-container">
-    <div id="chat"></div>
-    <div id="input-box">
-      <input id="messageInput" type="text" placeholder="Type a message..." />
-      <button id="sendBtn">Send</button>
+  <div id="app">
+    <!-- Sidebar -->
+    <div id="sidebar">
+      <div id="user-form">
+        <input id="usernameInput" placeholder="Enter username"/>
+        <input id="profileInput" placeholder="Profile picture URL (optional)"/>
+        <button id="registerBtn">Register / Login</button>
+      </div>
+      <hr>
+      <input id="searchInput" placeholder="Search users..."/>
+      <div id="userList"></div>
+    </div>
+
+    <!-- Chat Area -->
+    <div id="chatArea">
+      <div id="chatHeader"></div>
+      <div id="chat"></div>
+      <div id="chatInputBox">
+        <input id="messageInput" placeholder="Type a message..."/>
+        <button id="sendBtn">Send</button>
+      </div>
     </div>
   </div>
 
