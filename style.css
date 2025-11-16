@@ -21,19 +21,20 @@ body {
   padding: 10px;
 }
 
-#user-form input {
-  width: calc(100% - 20px);
+#authForm input, #loggedInUI input {
+  width: calc(100% - 10px);
   margin-bottom: 5px;
   padding: 5px;
 }
 
-#user-form button {
+#authForm button, #loggedInUI button {
   width: 100%;
   padding: 5px;
   background: #7289da;
   border: none;
   color: white;
   cursor: pointer;
+  margin-bottom: 5px;
 }
 
 #searchInput {
